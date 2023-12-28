@@ -1,5 +1,5 @@
+from django.http import Http404
 from django.shortcuts import render
-
 
 posts = [
     {
@@ -47,13 +47,19 @@ posts = [
 
 def index(request):
     template = 'blog/index.html'
-    context = {'posts': posts}
+    context = {'posts': posts[::-1]}
     return render(request, template, context)
 
 
 def post_detail(request, id):
     template = 'blog/detail.html'
-    context = {'post': posts[id]}
+    request_post = None
+    for post in posts:
+        if post['id'] == id:
+            request_post = post
+    if not request_post:
+        raise Http404('Такой записи не существует')
+    context = {'post': request_post}
     return render(request, template, context)
 
 
