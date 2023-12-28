@@ -58,7 +58,7 @@ def post_detail(request, id):
         if post['id'] == id:
             request_post = post
     if not request_post:
-        raise Http404('Такой записи не существует')
+        raise Http404('Запись не существует')
     context = {'post': request_post}
     return render(request, template, context)
 
