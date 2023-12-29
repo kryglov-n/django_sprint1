@@ -44,23 +44,22 @@ posts = [
     },
 ]
 
+posts_dict = {post['id']: post for post in posts}
+
+posts_dict = dict(sorted(posts_dict.items(), key=lambda x: x[0], reverse=True))
+
 
 def index(request):
     template = 'blog/index.html'
-    context = {'posts': posts[::-1]}
-    return render(request, template, context)
+    return render(request, template, {'posts': posts_dict})
 
 
 def post_detail(request, id):
     template = 'blog/detail.html'
-    request_post = None
-    for post in posts:
-        if post['id'] == id:
-            request_post = post
+    request_post = posts_dict.get(int(id), None)
     if not request_post:
         raise Http404('Запись не существует')
-    context = {'post': request_post}
-    return render(request, template, context)
+    return render(request, template, {'post': request_post})
 
 
 def category_posts(request, category_slug):
